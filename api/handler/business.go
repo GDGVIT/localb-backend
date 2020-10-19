@@ -25,7 +25,22 @@ func NewBusiness(svc business.Service) func(*fiber.Ctx) error {
 	}
 }
 
+func ShowBusinesses(svc business.Service) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		bizs, err := svc.GetApprovedBusinesses()
+		if err != nil {
+			return view.Wrap(err, c)
+		}
+
+		return c.JSON(fiber.Map{
+			"message":    "Businesses fetched",
+			"businesses": bizs,
+		})
+	}
+}
+
 func MakeBusinessHandler(app *fiber.App, svc business.Service) {
 	businessGroup := app.Group("/api/v1/business")
 	businessGroup.Post("/new", NewBusiness(svc))
+	businessGroup.Get("/listAll", ShowBusinesses(svc))
 }

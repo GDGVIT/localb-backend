@@ -5,6 +5,8 @@ import "github.com/rithikjain/local-businesses-backend/pkg/models"
 type Service interface {
 	AddBusiness(business *models.Business) error
 
+	GetApprovedBusinesses() (*[]models.Business, error)
+
 	GetRepo() Repository
 }
 
@@ -20,6 +22,10 @@ func NewService(r Repository) Service {
 
 func (s *service) AddBusiness(business *models.Business) error {
 	return s.repo.AddBusiness(business)
+}
+
+func (s *service) GetApprovedBusinesses() (*[]models.Business, error) {
+	return s.repo.GetApprovedBusinesses()
 }
 
 func (s *service) GetRepo() Repository {
