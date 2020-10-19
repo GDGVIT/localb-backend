@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
+	"github.com/rithikjain/local-businesses-backend/pkg/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -44,7 +45,7 @@ func main() {
 	}
 
 	// Setting up DB
-	_, err := dbConnect(
+	db, err := dbConnect(
 		os.Getenv("dbHost"),
 		os.Getenv("dbPort"),
 		os.Getenv("dbUser"),
@@ -64,8 +65,14 @@ func main() {
 	app.Use(cors.New())
 
 	// Migrate Tables
+	err = db.AutoMigrate(
+		&models.Business{},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	// Make repos, services and  handlers
+	// Make repos, services and handlers
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hey there looks like its working 🔥")
