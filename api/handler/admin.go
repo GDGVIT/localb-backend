@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"github.com/rithikjain/local-businesses-backend/api/middleware"
 	"github.com/rithikjain/local-businesses-backend/api/view"
 	"github.com/rithikjain/local-businesses-backend/pkg/admin"
 	"github.com/rithikjain/local-businesses-backend/pkg/models"
@@ -40,7 +41,27 @@ func Login(svc admin.Service) func(*fiber.Ctx) error {
 	}
 }
 
+func ShowBusinessesToApprove(svc admin.Service) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		_, err := middleware.ValidateAndGetClaims(c, "admin")
+		if err != nil {
+			return view.Wrap(err, c)
+		}
+
+		bizs, err := svc.GetBusinessesToApprove()
+		if err != nil {
+			return view.Wrap(err, c)
+		}
+
+		return c.JSON(fiber.Map{
+			"message":    "Businesses to approve fetched",
+			"businesses": bizs,
+		})
+	}
+}
+
 func MakeAdminHandler(app *fiber.App, svc admin.Service) {
 	adminGroup := app.Group("/api/v1/admin")
 	adminGroup.Post("/login", Login(svc))
+	adminGroup.Get("/businessesToApprove", middleware.Protected(), ShowBusinessesToApprove(svc))
 }

@@ -9,6 +9,8 @@ import (
 type Service interface {
 	Login(username, password string) (*models.Admin, error)
 
+	GetBusinessesToApprove() (*[]models.Business, error)
+
 	GetRepo() Repository
 }
 
@@ -31,6 +33,10 @@ func (s *service) Login(username, password string) (*models.Admin, error) {
 		return admin, nil
 	}
 	return nil, pkg.ErrNotFound
+}
+
+func (s *service) GetBusinessesToApprove() (*[]models.Business, error) {
+	return s.repo.GetBusinessesToApprove()
 }
 
 func (s *service) GetRepo() Repository {
