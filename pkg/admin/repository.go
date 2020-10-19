@@ -1,1 +1,33 @@
 package admin
+
+import (
+	"github.com/rithikjain/local-businesses-backend/pkg"
+	"github.com/rithikjain/local-businesses-backend/pkg/models"
+	"gorm.io/gorm"
+)
+
+type Repository interface {
+	FindByUsername(username string) (*models.Admin, error)
+}
+
+type repo struct {
+	DB *gorm.DB
+}
+
+func NewRepo(db *gorm.DB) Repository {
+	return &repo{
+		DB: db,
+	}
+}
+
+func (r *repo) FindByUsername(username string) (*models.Admin, error) {
+	admin := &models.Admin{}
+	err := r.DB.Where("username = ?", username).First(admin).Error
+	if err != nil {
+		return nil, pkg.ErrDatabase
+	}
+	if admin.Username == "" {
+		return nil, pkg.ErrNotFound
+	}
+	return admin, nil
+}

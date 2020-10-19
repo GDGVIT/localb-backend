@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
 	"github.com/rithikjain/local-businesses-backend/api/handler"
+	"github.com/rithikjain/local-businesses-backend/pkg/admin"
 	"github.com/rithikjain/local-businesses-backend/pkg/business"
 	"github.com/rithikjain/local-businesses-backend/pkg/models"
 	"gorm.io/driver/postgres"
@@ -69,6 +70,7 @@ func main() {
 	// Migrate Tables
 	err = db.AutoMigrate(
 		&models.Business{},
+		&models.Admin{},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -78,6 +80,10 @@ func main() {
 	businessRepo := business.NewRepo(db)
 	businessSvc := business.NewService(businessRepo)
 	handler.MakeBusinessHandler(app, businessSvc)
+
+	adminRepo := admin.NewRepo(db)
+	adminSvc := admin.NewService(adminRepo)
+	handler.MakeAdminHandler(app, adminSvc)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hey there looks like its working 🔥")
