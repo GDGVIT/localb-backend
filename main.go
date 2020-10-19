@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -58,7 +59,9 @@ func main() {
 
 	app := fiber.New(fiber.Config{CaseSensitive: true})
 
+	// Middlewares
 	app.Use(logger.New())
+	app.Use(cors.New())
 
 	// Migrate Tables
 
