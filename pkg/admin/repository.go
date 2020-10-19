@@ -10,6 +10,10 @@ type Repository interface {
 	FindByUsername(username string) (*models.Admin, error)
 
 	GetBusinessesToApprove() (*[]models.Business, error)
+
+	ApproveBusiness(businessID string) error
+
+	DeleteBusiness(businessID string) error
 }
 
 type repo struct {
@@ -43,4 +47,36 @@ func (r *repo) GetBusinessesToApprove() (*[]models.Business, error) {
 	}
 
 	return &bizs, nil
+}
+
+func (r *repo) ApproveBusiness(businessID string) error {
+	biz := &models.Business{}
+
+	err := r.DB.Where("id = ?", businessID).First(biz).Error
+	if err != nil {
+		return pkg.ErrDatabase
+	}
+
+	err = r.DB.Model(biz).Update("approved", true).Error
+	if err != nil {
+		return pkg.ErrDatabase
+	}
+
+	return nil
+}
+
+func (r *repo) DeleteBusiness(businessID string) error {
+	biz := &models.Business{}
+
+	err := r.DB.Where("id = ?", businessID).First(biz).Error
+	if err != nil {
+		return pkg.ErrDatabase
+	}
+
+	err = r.DB.Unscoped().Delete(biz).Error
+	if err != nil {
+		return pkg.ErrDatabase
+	}
+
+	return nil
 }

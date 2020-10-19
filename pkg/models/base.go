@@ -5,8 +5,7 @@ import (
 )
 
 type Base struct {
-	ID        string     `gorm:"default:uuid_generate_v4();primaryKey" json:"id"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `sql:"index"`
+	ID        string    `gorm:"default:uuid_generate_v4();primaryKey" json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

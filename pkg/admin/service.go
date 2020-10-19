@@ -11,6 +11,10 @@ type Service interface {
 
 	GetBusinessesToApprove() (*[]models.Business, error)
 
+	ApproveBusiness(businessID string) error
+
+	DeleteBusiness(businessID string) error
+
 	GetRepo() Repository
 }
 
@@ -37,6 +41,14 @@ func (s *service) Login(username, password string) (*models.Admin, error) {
 
 func (s *service) GetBusinessesToApprove() (*[]models.Business, error) {
 	return s.repo.GetBusinessesToApprove()
+}
+
+func (s *service) ApproveBusiness(businessID string) error {
+	return s.repo.ApproveBusiness(businessID)
+}
+
+func (s *service) DeleteBusiness(businessID string) error {
+	return s.repo.DeleteBusiness(businessID)
 }
 
 func (s *service) GetRepo() Repository {

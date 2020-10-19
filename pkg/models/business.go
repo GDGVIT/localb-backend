@@ -16,3 +16,7 @@ type Location struct {
 	Latitude  string `json:"latitude"`
 	Longitude string `json:"longitude"`
 }
+
+type GetBusinessID struct {
+	BusinessID string `json:"business_id"`
+}

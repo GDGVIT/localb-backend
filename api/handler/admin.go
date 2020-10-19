@@ -60,8 +60,56 @@ func ShowBusinessesToApprove(svc admin.Service) func(*fiber.Ctx) error {
 	}
 }
 
+func ApproveBusiness(svc admin.Service) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		_, err := middleware.ValidateAndGetClaims(c, "admin")
+		if err != nil {
+			return view.Wrap(err, c)
+		}
+
+		bizBody := &models.GetBusinessID{}
+		if err := c.BodyParser(bizBody); err != nil {
+			return view.Wrap(err, c)
+		}
+
+		err = svc.ApproveBusiness(bizBody.BusinessID)
+		if err != nil {
+			return view.Wrap(err, c)
+		}
+
+		return c.JSON(fiber.Map{
+			"message": "Business approved",
+		})
+	}
+}
+
+func DeleteBusiness(svc admin.Service) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		_, err := middleware.ValidateAndGetClaims(c, "admin")
+		if err != nil {
+			return view.Wrap(err, c)
+		}
+
+		bizBody := &models.GetBusinessID{}
+		if err := c.BodyParser(bizBody); err != nil {
+			return view.Wrap(err, c)
+		}
+
+		err = svc.DeleteBusiness(bizBody.BusinessID)
+		if err != nil {
+			return view.Wrap(err, c)
+		}
+
+		return c.JSON(fiber.Map{
+			"message": "Business deleted",
+		})
+	}
+}
+
 func MakeAdminHandler(app *fiber.App, svc admin.Service) {
 	adminGroup := app.Group("/api/v1/admin")
 	adminGroup.Post("/login", Login(svc))
 	adminGroup.Get("/businessesToApprove", middleware.Protected(), ShowBusinessesToApprove(svc))
+	adminGroup.Post("/approveBusiness", middleware.Protected(), ApproveBusiness(svc))
+	adminGroup.Post("/deleteBusiness", middleware.Protected(), DeleteBusiness(svc))
 }
