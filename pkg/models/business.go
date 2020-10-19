@@ -8,6 +8,7 @@ type Business struct {
 	PhotoUrl        string   `json:"photo_url"`
 	UserInfo        string   `json:"user_info"`
 	SocialMediaLink string   `json:"social_media_link"`
+	Approved        bool     `json:"-"`
 	Location        Location `gorm:"embedded;embeddedPrefix:location_"`
 }
 

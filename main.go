@@ -6,6 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
+	"github.com/rithikjain/local-businesses-backend/api/handler"
+	"github.com/rithikjain/local-businesses-backend/pkg/business"
 	"github.com/rithikjain/local-businesses-backend/pkg/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -73,6 +75,9 @@ func main() {
 	}
 
 	// Make repos, services and handlers
+	businessRepo := business.NewRepo(db)
+	businessSvc := business.NewService(businessRepo)
+	handler.MakeBusinessHandler(app, businessSvc)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hey there looks like its working 🔥")
