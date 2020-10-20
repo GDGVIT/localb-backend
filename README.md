@@ -52,6 +52,7 @@
 * Directions to execute
 
 ```bash
+go mod download
 go run main.go
 ```
 
