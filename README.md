@@ -16,9 +16,9 @@
 - [x] Add a new business
 - [x] Show all businesses
 - [x] Show businesses for a city
-- [ ] Paginate all responses
+- [x] Paginate all responses
 - [ ] Report a business
-- [ ] Sort by categories
+- [ ] Find by categories
 
 ### Admin
 - [x] Admin login
