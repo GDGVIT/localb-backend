@@ -15,6 +15,7 @@ type Business struct {
 type Location struct {
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
+	City      string  `json:"city"`
 }
 
 type GetBusinessID struct {
