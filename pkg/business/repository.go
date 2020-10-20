@@ -10,6 +10,8 @@ type Repository interface {
 	AddBusiness(business *models.Business) error
 
 	GetApprovedBusinesses() (*[]models.Business, error)
+
+	GetBusinessesByCity(city string) (*[]models.Business, error)
 }
 
 type repo struct {
@@ -34,6 +36,17 @@ func (r *repo) GetApprovedBusinesses() (*[]models.Business, error) {
 	var bizs []models.Business
 
 	err := r.DB.Where("approved=?", true).Find(&bizs).Error
+	if err != nil {
+		return nil, pkg.ErrDatabase
+	}
+
+	return &bizs, nil
+}
+
+func (r *repo) GetBusinessesByCity(city string) (*[]models.Business, error) {
+	var bizs []models.Business
+
+	err := r.DB.Where("approved=? and location_city=?", true, city).Find(&bizs).Error
 	if err != nil {
 		return nil, pkg.ErrDatabase
 	}

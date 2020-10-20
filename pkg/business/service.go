@@ -7,6 +7,8 @@ type Service interface {
 
 	GetApprovedBusinesses() (*[]models.Business, error)
 
+	GetBusinessesByCity(city string) (*[]models.Business, error)
+
 	GetRepo() Repository
 }
 
@@ -26,6 +28,10 @@ func (s *service) AddBusiness(business *models.Business) error {
 
 func (s *service) GetApprovedBusinesses() (*[]models.Business, error) {
 	return s.repo.GetApprovedBusinesses()
+}
+
+func (s *service) GetBusinessesByCity(city string) (*[]models.Business, error) {
+	return s.repo.GetBusinessesByCity(city)
 }
 
 func (s *service) GetRepo() Repository {
