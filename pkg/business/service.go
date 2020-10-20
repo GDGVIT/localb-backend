@@ -5,7 +5,7 @@ import "github.com/rithikjain/local-businesses-backend/pkg/models"
 type Service interface {
 	AddBusiness(business *models.Business) error
 
-	GetApprovedBusinesses() (*[]models.Business, error)
+	GetApprovedBusinesses(page, pageSize int) (*[]models.Business, error)
 
 	GetBusinessesByCity(city string) (*[]models.Business, error)
 
@@ -26,8 +26,8 @@ func (s *service) AddBusiness(business *models.Business) error {
 	return s.repo.AddBusiness(business)
 }
 
-func (s *service) GetApprovedBusinesses() (*[]models.Business, error) {
-	return s.repo.GetApprovedBusinesses()
+func (s *service) GetApprovedBusinesses(page, pageSize int) (*[]models.Business, error) {
+	return s.repo.GetApprovedBusinesses(page, pageSize)
 }
 
 func (s *service) GetBusinessesByCity(city string) (*[]models.Business, error) {

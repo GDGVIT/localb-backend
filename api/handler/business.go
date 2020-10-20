@@ -5,6 +5,7 @@ import (
 	"github.com/rithikjain/local-businesses-backend/api/view"
 	"github.com/rithikjain/local-businesses-backend/pkg/business"
 	"github.com/rithikjain/local-businesses-backend/pkg/models"
+	"strconv"
 )
 
 func NewBusiness(svc business.Service) func(*fiber.Ctx) error {
@@ -27,13 +28,18 @@ func NewBusiness(svc business.Service) func(*fiber.Ctx) error {
 
 func ShowBusinesses(svc business.Service) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		bizs, err := svc.GetApprovedBusinesses()
+		page, _ := strconv.Atoi(c.Query("page", "1"))
+		pageSize, _ := strconv.Atoi(c.Query("pagesize", "10"))
+
+		bizs, err := svc.GetApprovedBusinesses(page, pageSize)
 		if err != nil {
 			return view.Wrap(err, c)
 		}
 
 		return c.JSON(fiber.Map{
 			"message":    "Businesses fetched",
+			"page":       page,
+			"page_size":  pageSize,
 			"businesses": bizs,
 		})
 	}

@@ -9,7 +9,7 @@ import (
 type Repository interface {
 	AddBusiness(business *models.Business) error
 
-	GetApprovedBusinesses() (*[]models.Business, error)
+	GetApprovedBusinesses(offset, pageSize int) (*[]models.Business, error)
 
 	GetBusinessesByCity(city string) (*[]models.Business, error)
 }
@@ -32,10 +32,10 @@ func (r *repo) AddBusiness(business *models.Business) error {
 	return nil
 }
 
-func (r *repo) GetApprovedBusinesses() (*[]models.Business, error) {
+func (r *repo) GetApprovedBusinesses(page, pageSize int) (*[]models.Business, error) {
 	var bizs []models.Business
 
-	err := r.DB.Where("approved=?", true).Find(&bizs).Error
+	err := r.DB.Where("approved=?", true).Scopes(pkg.Paginate(page, pageSize)).Find(&bizs).Error
 	if err != nil {
 		return nil, pkg.ErrDatabase
 	}
