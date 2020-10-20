@@ -12,6 +12,8 @@ type Repository interface {
 	GetApprovedBusinesses(page, pageSize int) (*[]models.Business, error)
 
 	GetBusinessesByCity(city string, page, pageSize int) (*[]models.Business, error)
+
+	GetBusinessesByCityAndType(city, typ string, page, pageSize int) (*[]models.Business, error)
 }
 
 type repo struct {
@@ -46,7 +48,22 @@ func (r *repo) GetApprovedBusinesses(page, pageSize int) (*[]models.Business, er
 func (r *repo) GetBusinessesByCity(city string, page, pageSize int) (*[]models.Business, error) {
 	var bizs []models.Business
 
-	err := r.DB.Where("approved=? and location_city=?", true, city).Scopes(pkg.Paginate(page, pageSize)).Find(&bizs).Error
+	err := r.DB.Where("approved=? and location_city=?", true, city).
+		Scopes(pkg.Paginate(page, pageSize)).
+		Find(&bizs).Error
+	if err != nil {
+		return nil, pkg.ErrDatabase
+	}
+
+	return &bizs, nil
+}
+
+func (r *repo) GetBusinessesByCityAndType(city, typ string, page, pageSize int) (*[]models.Business, error) {
+	var bizs []models.Business
+
+	err := r.DB.Where("approved=? and location_city=? and type=?", true, city, typ).
+		Scopes(pkg.Paginate(page, pageSize)).
+		Find(&bizs).Error
 	if err != nil {
 		return nil, pkg.ErrDatabase
 	}

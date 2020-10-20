@@ -9,6 +9,8 @@ type Service interface {
 
 	GetBusinessesByCity(city string, page, pageSize int) (*[]models.Business, error)
 
+	GetBusinessesByCityAndType(city, typ string, page, pageSize int) (*[]models.Business, error)
+
 	GetRepo() Repository
 }
 
@@ -32,6 +34,10 @@ func (s *service) GetApprovedBusinesses(page, pageSize int) (*[]models.Business,
 
 func (s *service) GetBusinessesByCity(city string, page, pageSize int) (*[]models.Business, error) {
 	return s.repo.GetBusinessesByCity(city, page, pageSize)
+}
+
+func (s *service) GetBusinessesByCityAndType(city, typ string, page, pageSize int) (*[]models.Business, error) {
+	return s.repo.GetBusinessesByCityAndType(city, typ, page, pageSize)
 }
 
 func (s *service) GetRepo() Repository {
