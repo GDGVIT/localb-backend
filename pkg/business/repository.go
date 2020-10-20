@@ -9,9 +9,9 @@ import (
 type Repository interface {
 	AddBusiness(business *models.Business) error
 
-	GetApprovedBusinesses(offset, pageSize int) (*[]models.Business, error)
+	GetApprovedBusinesses(page, pageSize int) (*[]models.Business, error)
 
-	GetBusinessesByCity(city string) (*[]models.Business, error)
+	GetBusinessesByCity(city string, page, pageSize int) (*[]models.Business, error)
 }
 
 type repo struct {
@@ -43,10 +43,10 @@ func (r *repo) GetApprovedBusinesses(page, pageSize int) (*[]models.Business, er
 	return &bizs, nil
 }
 
-func (r *repo) GetBusinessesByCity(city string) (*[]models.Business, error) {
+func (r *repo) GetBusinessesByCity(city string, page, pageSize int) (*[]models.Business, error) {
 	var bizs []models.Business
 
-	err := r.DB.Where("approved=? and location_city=?", true, city).Find(&bizs).Error
+	err := r.DB.Where("approved=? and location_city=?", true, city).Scopes(pkg.Paginate(page, pageSize)).Find(&bizs).Error
 	if err != nil {
 		return nil, pkg.ErrDatabase
 	}

@@ -47,14 +47,19 @@ func ShowBusinesses(svc business.Service) func(*fiber.Ctx) error {
 
 func ShowBusinessesByCity(svc business.Service) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		page, _ := strconv.Atoi(c.Query("page", "1"))
+		pageSize, _ := strconv.Atoi(c.Query("pagesize", "10"))
+
 		city := c.Query("city")
-		bizs, err := svc.GetBusinessesByCity(city)
+		bizs, err := svc.GetBusinessesByCity(city, page, pageSize)
 		if err != nil {
 			return view.Wrap(err, c)
 		}
 
 		return c.JSON(fiber.Map{
 			"message":    "Businesses fetched",
+			"page":       page,
+			"page_size":  pageSize,
 			"businesses": bizs,
 		})
 	}
