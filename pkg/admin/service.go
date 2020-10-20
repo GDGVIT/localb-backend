@@ -9,7 +9,7 @@ import (
 type Service interface {
 	Login(username, password string) (*models.Admin, error)
 
-	GetBusinessesToApprove() (*[]models.Business, error)
+	GetBusinessesToApprove(page, pageSize int) (*[]models.Business, error)
 
 	ApproveBusiness(businessID string) error
 
@@ -39,8 +39,8 @@ func (s *service) Login(username, password string) (*models.Admin, error) {
 	return nil, pkg.ErrNotFound
 }
 
-func (s *service) GetBusinessesToApprove() (*[]models.Business, error) {
-	return s.repo.GetBusinessesToApprove()
+func (s *service) GetBusinessesToApprove(page, pageSize int) (*[]models.Business, error) {
+	return s.repo.GetBusinessesToApprove(page, pageSize)
 }
 
 func (s *service) ApproveBusiness(businessID string) error {

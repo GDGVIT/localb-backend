@@ -8,6 +8,7 @@ import (
 	"github.com/rithikjain/local-businesses-backend/pkg/admin"
 	"github.com/rithikjain/local-businesses-backend/pkg/models"
 	"os"
+	"strconv"
 )
 
 func Login(svc admin.Service) func(*fiber.Ctx) error {
@@ -43,18 +44,23 @@ func Login(svc admin.Service) func(*fiber.Ctx) error {
 
 func ShowBusinessesToApprove(svc admin.Service) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		page, _ := strconv.Atoi(c.Query("page", "1"))
+		pageSize, _ := strconv.Atoi(c.Query("pagesize", "10"))
+
 		_, err := middleware.ValidateAndGetClaims(c, "admin")
 		if err != nil {
 			return view.Wrap(err, c)
 		}
 
-		bizs, err := svc.GetBusinessesToApprove()
+		bizs, err := svc.GetBusinessesToApprove(page, pageSize)
 		if err != nil {
 			return view.Wrap(err, c)
 		}
 
 		return c.JSON(fiber.Map{
 			"message":    "Businesses to approve fetched",
+			"page":       page,
+			"page_size":  pageSize,
 			"businesses": bizs,
 		})
 	}

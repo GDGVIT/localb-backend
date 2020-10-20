@@ -9,7 +9,7 @@ import (
 type Repository interface {
 	FindByUsername(username string) (*models.Admin, error)
 
-	GetBusinessesToApprove() (*[]models.Business, error)
+	GetBusinessesToApprove(page, pageSize int) (*[]models.Business, error)
 
 	ApproveBusiness(businessID string) error
 
@@ -38,10 +38,10 @@ func (r *repo) FindByUsername(username string) (*models.Admin, error) {
 	return admin, nil
 }
 
-func (r *repo) GetBusinessesToApprove() (*[]models.Business, error) {
+func (r *repo) GetBusinessesToApprove(page, pageSize int) (*[]models.Business, error) {
 	var bizs []models.Business
 
-	err := r.DB.Where("approved=?", false).Find(&bizs).Error
+	err := r.DB.Where("approved=?", false).Scopes(pkg.Paginate(page, pageSize)).Find(&bizs).Error
 	if err != nil {
 		return nil, pkg.ErrDatabase
 	}
