@@ -18,7 +18,7 @@
 - [x] Show businesses for a city
 - [x] Paginate all responses
 - [ ] Report a business
-- [ ] Find by categories
+- [x] Find by types
 
 ### Admin
 - [x] Admin login
